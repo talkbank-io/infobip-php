@@ -201,7 +201,6 @@ class Client
     {
         $response = $this->guzzle->request('POST', $path, [
             'json'      => $params,
-            'debug'     => true,
         ]);
         return json_decode($response->getBody()->getContents(), true);
     }
