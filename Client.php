@@ -108,6 +108,38 @@ class Client
     }
 
     /**
+     * Send template
+     *
+     * Endpoint: https://{base_url}/omni/1/advanced
+     *
+     * @param string $phone
+     * @param string $template
+     * @param string $namespace
+     * @param string $lang
+     * @param array $placeholders
+     *
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendTemplate(string $phone, string $template, string $namespace, string $lang, array $placeholders = [])
+    {
+        $params = [
+            'scenarioKey' => $this->scenario,
+            'destinations' => [[
+                'to' => ['phoneNumber' => $phone]
+            ]],
+            'whatsApp' => [
+                'templateName'      => $template,
+                'templateNamespace' => $namespace,
+                'templateData'      => $placeholders,
+                'language'          => $lang,
+            ],
+        ];
+
+        return $this->exec('/omni/1/advanced', $params);
+    }
+
+    /**
      * Send image
      *
      * Endpoint: https://{base_url}/omni/1/advanced
