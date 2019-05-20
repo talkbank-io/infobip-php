@@ -3,6 +3,7 @@
 namespace TalkBank\Infobip;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * API for partners
@@ -223,6 +224,64 @@ class Client
     }
 
     /**
+     * @param string $phone
+     * @param float $longitude
+     * @param float $latitude
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendLocation(string $phone, float $longitude, float $latitude)
+    {
+        $params = [
+            'scenarioKey' => $this->scenario,
+            'destinations' => [[
+                'to' => ['phoneNumber' => $phone]
+            ]],
+            'whatsApp' => [
+                'longitude' => $longitude,
+                'latitude' => $latitude,
+                // 'locationName' => 'Name of the location',
+                // 'address' =>'Address name',
+            ],
+        ];
+
+        return $this->exec('/omni/1/advanced', $params);
+    }
+
+    /**
+     * @param string $phone
+     * @param string $name
+     * @param string $contact
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendContact(string $phone, string $name, string $contact)
+    {
+        $params = [
+            'scenarioKey' => $this->scenario,
+            'destinations' => [[
+                'to' => ['phoneNumber' => $phone]
+            ]],
+            'whatsApp' => [
+                'contacts' => [
+                    'name' => [
+                        'firstName' => $name,
+                        'formattedName' => $name,
+                    ],
+                    'phones' => [
+                        [
+                            'phone' => $contact,
+                            'type' => 'MAIN',
+                        ]
+                    ]
+                ],
+            ],
+        ];
+
+        return $this->exec('/omni/1/advanced', $params);
+    }
+
+    /**
      * @param string $method
      * @param string $path
      * @param array $params
@@ -232,8 +291,10 @@ class Client
     protected function exec(string $path, array $params = [])
     {
         $response = $this->guzzle->request('POST', $path, [
-            'json'      => $params,
+            'json'  => $params,
+        //  'debug' => true,
         ]);
+
         return json_decode($response->getBody()->getContents(), true);
     }
 }
