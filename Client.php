@@ -31,12 +31,15 @@ class Client
      * @param string $username
      * @param string $password
      */
-    public function __construct(string $host, string $username, string $password)
+    public function __construct(string $host, string $username, string $password, ?string $token = null)
     {
-        $this->guzzle = new GuzzleClient([
-            'base_uri' => $host,
-            'auth' => [$username, $password]
-        ]);
+        if ($token) {
+            $auth = ['header' => "Authorization: App $token"];
+        } else {
+            $auth = ['auth' => [$username, $password]];
+        }
+        
+        $this->guzzle = new GuzzleClient(['base_uri' => $host,] + $auth);
     }
 
     /**
@@ -152,7 +155,7 @@ class Client
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function sendImage(string $phone, string $imageUrl, string $capture = null)
+    public function sendImage(string $phone, string $imageUrl, string $capture)
     {
         $params = [
             'scenarioKey' => $this->scenario,
@@ -160,8 +163,8 @@ class Client
                 'to' => ['phoneNumber' => $phone]
             ]],
             'whatsApp' => [
-                'text' => $capture,
-                'imageUrl' => $imageUrl,
+                'text'      => $capture,
+                'imageUrl'  => $imageUrl,
             ],
         ];
 
@@ -215,8 +218,36 @@ class Client
                 'to' => ['phoneNumber' => $phone]
             ]],
             'whatsApp' => [
-                'text' => $capture,
-                'fileUrl' => $fileUrl,
+                'text'      => $capture,
+                'fileUrl'   => $fileUrl,
+            ],
+        ];
+
+        return $this->exec('/omni/1/advanced', $params);
+    }
+
+    /**
+     * Send file
+     *
+     * Endpoint: https://{base_url}/omni/1/advanced
+     *
+     * @param string $phone
+     * @param string $videoUrl
+     * @param string $capture
+     *
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sendVideo(string $phone, string $videoUrl, string $capture)
+    {
+        $params = [
+            'scenarioKey' => $this->scenario,
+            'destinations' => [[
+                'to' => ['phoneNumber' => $phone]
+            ]],
+            'whatsApp' => [
+                'text'      => $capture,
+                'videoUrl'  => $videoUrl,
             ],
         ];
 
