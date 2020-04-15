@@ -34,12 +34,12 @@ class Client
     public function __construct(string $host, string $username, string $password, ?string $token = null)
     {
         if ($token) {
-            $auth = ['header' => "Authorization: App $token"];
+            $auth = ['headers' => ['Authorization' => "App $token"]];
         } else {
             $auth = ['auth' => [$username, $password]];
         }
         
-        $this->guzzle = new GuzzleClient(['base_uri' => $host,] + $auth);
+        $this->guzzle = new GuzzleClient(['debug' => true, 'base_uri' => $host,] + $auth);
     }
 
     /**
@@ -107,6 +107,8 @@ class Client
                 'text' => $message
             ],
         ];
+
+        var_dump($params);
 
         return $this->exec('/omni/1/advanced', $params);
     }
