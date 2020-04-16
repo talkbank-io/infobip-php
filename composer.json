@@ -2,7 +2,7 @@
     "name": "talkbank-io/infobip-php",
     "description": "Wrapper for Infobip",
     "license": "MIT",
-    "version": "1.3",
+    "version": "2.0",
     "require": {
         "php": "^7.1",
         "ext-json": "*",

@@ -28,18 +28,14 @@ class Client
     /**
      * Client constructor.
      * @param string $host
-     * @param string $username
-     * @param string $password
+     * @param string $token
      */
-    public function __construct(string $host, string $username, string $password, ?string $token = null)
+    public function __construct(string $host, string $token)
     {
-        if ($token) {
-            $auth = ['headers' => ['Authorization' => "App $token"]];
-        } else {
-            $auth = ['auth' => [$username, $password]];
-        }
-        
-        $this->guzzle = new GuzzleClient(['base_uri' => $host,] + $auth);
+        $this->guzzle = new GuzzleClient([
+            'base_uri' => $host,
+            'headers'  => ['Authorization' => "App $token"],
+        ]);
     }
 
     /**
