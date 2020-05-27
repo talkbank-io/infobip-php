@@ -123,17 +123,21 @@ class Client
      */
     public function sendTemplate(string $phone, string $template, string $namespace, string $lang, array $placeholders = [])
     {
+        $whatsApp = [
+            'templateName' => $template,
+            'templateData' => $placeholders,
+            'language'     => $lang,
+        ];
+        if ($namespace) {
+            $whatsApp['templateNamespace'] = $namespace;
+        }
+
         $params = [
             'scenarioKey' => $this->scenario,
             'destinations' => [[
                 'to' => ['phoneNumber' => $phone]
             ]],
-            'whatsApp' => [
-                'templateName'      => $template,
-                'templateNamespace' => $namespace,
-                'templateData'      => $placeholders,
-                'language'          => $lang,
-            ],
+            'whatsApp' => $whatsApp,
         ];
 
         return $this->exec('/omni/1/advanced', $params);
@@ -319,7 +323,7 @@ class Client
     {
         $response = $this->guzzle->request('POST', $path, [
             'json'  => $params,
-        //  'debug' => true,
+            //  'debug' => true,
         ]);
 
         return json_decode($response->getBody()->getContents(), true);
