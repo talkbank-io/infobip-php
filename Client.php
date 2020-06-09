@@ -144,6 +144,44 @@ class Client
     }
 
     /**
+     * Send media template
+     *
+     * Endpoint: https://{base_url}/omni/1/advanced
+     *
+     * @param string $phone
+     * @param string $template
+     * @param string $lang
+     * @param array $header
+     * @param array $placeholders
+     *
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @link https://www.infobip.com/docs/whatsapp/send-whatsapp-over-api#send-media-message-templates-beta-%23send-media-message-templates-beta-#send-media-message-templates-beta-
+     */
+    public function sendMediaTemplate(string $phone, string $template, string $lang, array $header, ?array $placeholders = [])
+    {
+        return $this->exec('/omni/1/advanced', [
+            'scenarioKey' => $this->scenario,
+            'destinations' => [
+                [
+                    'to' => ['phoneNumber' => $phone]
+                ]
+            ],
+            'whatsApp' => [
+                'templateName' => $template,
+                'mediaTemplateData' => [
+                    'header' => $header,
+                    'body' => [
+                        'placeholders' => $placeholders,
+                    ],
+                ],
+                'language' => $lang,
+            ],
+        ]);
+    }
+
+    /**
      * Send image
      *
      * Endpoint: https://{base_url}/omni/1/advanced
