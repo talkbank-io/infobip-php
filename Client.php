@@ -152,22 +152,18 @@ class Client
      * @param string $template
      * @param string $lang
      * @param array $header
-     * @param array $placeholders
+     * @param array|null $placeholders
+     * @param array|null $buttons
      *
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
-     *
      * @link https://www.infobip.com/docs/whatsapp/send-whatsapp-over-api#send-media-message-templates-beta-%23send-media-message-templates-beta-#send-media-message-templates-beta-
      */
-    public function sendMediaTemplate(string $phone, string $template, string $lang, array $header, ?array $placeholders = [])
+    public function sendMediaTemplate(string $phone, string $template, string $lang, array $header, ?array $placeholders = [], ?array $buttons = [])
     {
-        return $this->exec('/omni/1/advanced', [
+        $message = [
             'scenarioKey' => $this->scenario,
-            'destinations' => [
-                [
-                    'to' => ['phoneNumber' => $phone]
-                ]
-            ],
+            'destinations' => [['to' => ['phoneNumber' => $phone]]],
             'whatsApp' => [
                 'templateName' => $template,
                 'mediaTemplateData' => [
@@ -178,7 +174,13 @@ class Client
                 ],
                 'language' => $lang,
             ],
-        ]);
+        ];
+
+        if ($buttons) {
+            $message['whatsApp']['mediaTemplateData']['buttons'] = $buttons;
+        }
+
+        return $this->exec('/omni/1/advanced', $message);
     }
 
     /**
