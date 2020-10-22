@@ -157,9 +157,9 @@ class Client
      *
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @link https://www.infobip.com/docs/whatsapp/send-whatsapp-over-api#send-media-message-templates-beta-%23send-media-message-templates-beta-#send-media-message-templates-beta-
+     * @link https://www.infobip.com/docs/whatsapp/send-whatsapp-over-api#send-interactive-message-templates
      */
-    public function sendMediaTemplate(string $phone, string $template, string $lang, array $header, ?array $placeholders = [], ?array $buttons = [])
+    public function sendMediaTemplate(string $phone, string $template, string $lang, ?array $header = null, array $placeholders = [], array $buttons = [])
     {
         $message = [
             'scenarioKey' => $this->scenario,
@@ -167,7 +167,6 @@ class Client
             'whatsApp' => [
                 'templateName' => $template,
                 'mediaTemplateData' => [
-                    'header' => $header,
                     'body' => [
                         'placeholders' => $placeholders,
                     ],
@@ -176,6 +175,10 @@ class Client
             ],
         ];
 
+        if (null === $header) {
+            $message['whatsApp']['mediaTemplateData']['header'] = $header;
+        }
+        
         if ($buttons) {
             $message['whatsApp']['mediaTemplateData']['buttons'] = $buttons;
         }
