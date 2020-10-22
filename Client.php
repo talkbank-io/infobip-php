@@ -175,10 +175,10 @@ class Client
             ],
         ];
 
-        if (null === $header) {
+        if (null !== $header) {
             $message['whatsApp']['mediaTemplateData']['header'] = $header;
         }
-        
+
         if ($buttons) {
             $message['whatsApp']['mediaTemplateData']['buttons'] = $buttons;
         }
