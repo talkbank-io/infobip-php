@@ -193,12 +193,12 @@ class Client
      *
      * @param string $phone
      * @param string $imageUrl
-     * @param string $capture
+     * @param string|null $capture
      *
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function sendImage(string $phone, string $imageUrl, string $capture)
+    public function sendImage(string $phone, string $imageUrl, ?string $capture)
     {
         $params = [
             'scenarioKey' => $this->scenario,
@@ -206,10 +206,13 @@ class Client
                 'to' => ['phoneNumber' => $phone]
             ]],
             'whatsApp' => [
-                'text'      => $capture,
                 'imageUrl'  => $imageUrl,
             ],
         ];
+
+        if (!empty($capture)) {
+            $params['whatsApp']['text'] = $capture;
+        }
 
         return $this->exec('/omni/1/advanced', $params);
     }
