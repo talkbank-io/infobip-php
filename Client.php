@@ -193,7 +193,7 @@ class Client
      *
      * @param string $phone
      * @param string $imageUrl
-     * @param string|null $capture
+     * @param null|string $capture
      *
      * @return mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
